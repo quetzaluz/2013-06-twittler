@@ -6,21 +6,29 @@
 	<link rel="stylesheet" type="text/css" href="index.css">
   </head>
   <body>
-  <
+  <div id="tweetBox"></div>
     <script>
-
       $(document).ready(function(){
         var $body = $('body');
+        var $tweetBox = $('#tweetBox');
         var intervalID = setInterval(function () {
 		//trying to refresh tweets with setInterval
-		$body.html(''); 
+		$tweetBox.html(''); 
         var index = streams.home.length - 1;
-		var limit = streams.home.length - 20; 
+		var limit = streams.home.length - 20;
         while(index >= limit){
           var tweet = streams.home[index];
-          var $tweet = $('<div id="tweetFeed"></div>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message + "("+ tweet.created_at+")");
-          $tweet.appendTo($body);
+		  var $tweet = $('<div></div>') // from original
+          var $tweetText = $('<div class = "tweetText"></div>');
+          var $tweetTime = $('<div class = "tweetTime"></div>');
+		  var $tweetUser = $('<div class = "tweetUser"></div>');
+		  $tweetUser.text('@' + tweet.user);
+          $tweetText.text(': ' + tweet.message);
+          $tweetTime.text("("+ tweet.created_at+")");
+		  $tweetUser.appendTo($tweet);
+          $tweetText.appendTo($tweet);
+          $tweetTime.appendTo($tweet);
+		  $tweet.appendTo($tweetBox);
           index -= 1;
 		  }
 		}, 200);

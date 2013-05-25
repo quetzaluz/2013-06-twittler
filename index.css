@@ -1,0 +1,18 @@
+#tweetBox {
+  font-family: "Andale Mono", AndaleMono, monospace;
+  width = 50%;
+  margin: 0 auto;
+ }
+
+.tweetUser {
+  color: #CC0000;
+  font-style: bold;
+}
+
+.tweetText {}
+
+.tweetTime {
+  font-style: oblique;
+  color: #005C99;
+}
+ 
