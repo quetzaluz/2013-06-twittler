@@ -2,6 +2,7 @@
 <html>
   <head>
     <script src="jquery.js"></script>
+	<script src="jquery.timeago.js"></script>
     <script src="data_generator.js"></script>
 	<link rel="stylesheet" type="text/css" href="index.css">
   </head>
@@ -9,6 +10,7 @@
   <div id="tweetBox"></div>
     <script>
       $(document).ready(function(){
+	    $("abbr.timeago").timeago(); //attaching time func
         var $body = $('body');
         var $tweetBox = $('#tweetBox');
         var intervalID = setInterval(function () {
@@ -17,14 +19,15 @@
         var index = streams.home.length - 1;
 		var limit = streams.home.length - 20;
         while(index >= limit){
+		  $tweetBox.css('height', $(window).height() - 32 + 'px');
           var tweet = streams.home[index];
-		  var $tweet = $('<div></div>') // from original
+		  var $tweet = $('<div class = tweet1></div>') // from original
           var $tweetText = $('<div class = "tweetText"></div>');
           var $tweetTime = $('<div class = "tweetTime"></div>');
 		  var $tweetUser = $('<div class = "tweetUser"></div>');
 		  $tweetUser.text('@' + tweet.user);
           $tweetText.text(': ' + tweet.message);
-          $tweetTime.text("("+ tweet.created_at+")");
+          $tweetTime.text(jQuery.timeago(tweet.created_at));
 		  $tweetUser.appendTo($tweet);
           $tweetText.appendTo($tweet);
           $tweetTime.appendTo($tweet);
