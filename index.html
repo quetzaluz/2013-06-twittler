@@ -9,34 +9,51 @@
   <body>
   <div id="tweetBox"></div>
     <script>
-      $(document).ready(function(){
-	    $("abbr.timeago").timeago(); //attaching time func
-        var $body = $('body');
+      //functions to be called in interval
+	  var showStream = function (stream) {
+	    var index = stream.length - 1;
+		var limit;
+		if (stream == streams.home) limit = stream.length - 20;
+		else limit = -(stream.length);
+		var $body = $('body');
         var $tweetBox = $('#tweetBox');
-        var intervalID = setInterval(function () {
-		//trying to refresh tweets with setInterval
-		$tweetBox.html(''); 
-        var index = streams.home.length - 1;
-		var limit = streams.home.length - 20;
-        while(index >= limit){
+        $tweetBox.html(''); 
+		while(index >= limit){
 		  $tweetBox.css('height', $(window).height() - 32 + 'px');
-          var tweet = streams.home[index];
-		  var $tweet = $('<div class = tweet1></div>') // from original
+          var tweet = stream[index];
+		  var $tweet = $('<div class = tweet1></div>'); 
           var $tweetText = $('<div class = "tweetText"></div>');
           var $tweetTime = $('<div class = "tweetTime"></div>');
-		  var $tweetUser = $('<div class = "tweetUser"></div>');
-		  $tweetUser.text('@' + tweet.user);
-          $tweetText.text(': ' + tweet.message);
+		  var $tweetUser = $("<div class = 'tweetUser'></div>");
+		  $tweetUser.text("@" + tweet.user);
+          $tweetText.text(": " + tweet.message);
           $tweetTime.text(jQuery.timeago(tweet.created_at));
 		  $tweetUser.appendTo($tweet);
           $tweetText.appendTo($tweet);
           $tweetTime.appendTo($tweet);
 		  $tweet.appendTo($tweetBox);
-          index -= 1;
-		  }
-		}, 200);
-      });
+		  index -= 1;
+		}
+	  }
 
+	  var setStream = function (user) {
+		//user, home, or no arg to return source array val
+		var home, stream;
+		if (user === "home") stream = streams.home;
+		else if (user === null) return;
+		else stream = streams.users.user;
+		return stream;
+	  }
+
+      $(document).ready(function(){
+	    $("abbr.timeago").timeago(); //attaching time func
+        var intervalID = setInterval(function (){showStream(setStream("home"))}, 900);
+		//Will have filtering soon..
+		//Trying to figure out how to toggle it.
+		//showStream(streams.users.mracus) works
+		//however, not yet toggled by clicking name.
+		//showStream(setStream($#user)) or somesuch.	
+      });
     </script>
   </body>
 </html>
