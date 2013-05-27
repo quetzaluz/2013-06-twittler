@@ -24,6 +24,12 @@ body {
   font-size: 24pt;
 }
 
+#navBar {
+  font-family: Arial;
+  color: red;
+  font-size: 18pt;
+}
+
 #tweetBox {
   font-family: "Andale Mono", AndaleMono, monospace;
   background-color: transparent;

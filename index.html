@@ -17,12 +17,12 @@
 	    var index = stream.length - 1;
 		var limit;
 		if (stream == streams.home) limit = stream.length - 20;
-		else limit = -(stream.length);
+		else limit = 0;
 		var $body = $('body');
         var $tweetBox = $('#tweetBox');
         $tweetBox.html(''); 
 		while(index > limit){
-		  $tweetBox.css('height', $(window).height() - 32 + 'px');
+		  $tweetBox.css('height', $(window).height() - 50 + 'px');
           var tweet = stream[index];
 		  var $tweet = $("<div class='tweet'></div>"); 
           var $tweetText = $('<div class = "tweetText"></div>');
@@ -41,9 +41,8 @@
 	  }
 
 	  var setStream = function (thisUser) {
-		//user, home, or no arg to return source array val
+		//user, "home", or no arg to return source array val
 		if (thisUser === "home") {
-		  stream = [];
 		  $('#streamTitle').text("Twittles on your Home Stream");
 		  return stream = streams.home;
 		  }
@@ -51,11 +50,10 @@
 		else {
 		  //this is where my problem is--steams.users is
 		  //an object filled with other objects, not array.
-		  for (var i=0; i<streams.users.length; i++) {
-		    if (streams.users[i] === thisUser) {
-			  stream = [];
-			  console.log("executed setStream("+ thisUser + ")")
-			  return stream.push(streams.users[i]);
+		  for (var prop1 in streams.users) {
+		    if (prop1 === thisUser && typeof streams.users[prop1] == "object") {
+			   $('#streamTitle').text("Twittles on "+ thisUser +"'s stream")
+			   return stream = streams.users[thisUser];
 			}
 		  }
 		}
@@ -74,6 +72,7 @@
 		  showStream(setStream());
 		}, 900);
 		$('body').delegate('.tweetUser', 'click', getUser);
+		$('body').delegate('#streamTitle', 'click', function () {setStream("home")})
 	  }); 
 	  		
     </script>
