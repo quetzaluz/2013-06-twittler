@@ -7,9 +7,12 @@
 	<link rel="stylesheet" type="text/css" href="index.css">
   </head>
   <body>
+  <div id="streamTitle"></div>
   <div id="tweetBox"></div>
     <script>
       //functions to be called in interval
+	  var stream;
+	  
 	  var showStream = function (stream) {
 	    var index = stream.length - 1;
 		var limit;
@@ -18,14 +21,15 @@
 		var $body = $('body');
         var $tweetBox = $('#tweetBox');
         $tweetBox.html(''); 
-		while(index >= limit){
+		while(index > limit){
 		  $tweetBox.css('height', $(window).height() - 32 + 'px');
           var tweet = stream[index];
-		  var $tweet = $('<div class = tweet1></div>'); 
+		  var $tweet = $("<div class='tweet'></div>"); 
           var $tweetText = $('<div class = "tweetText"></div>');
           var $tweetTime = $('<div class = "tweetTime"></div>');
-		  var $tweetUser = $("<div class = 'tweetUser'></div>");
+		  var $tweetUser = $("<button type='button' class = 'tweetUser' id = '"+ tweet.user+"'></a>");
 		  $tweetUser.text("@" + tweet.user);
+		  $tweetUser.val(tweet.user);
           $tweetText.text(": " + tweet.message);
           $tweetTime.text(jQuery.timeago(tweet.created_at));
 		  $tweetUser.appendTo($tweet);
@@ -36,24 +40,42 @@
 		}
 	  }
 
-	  var setStream = function (user) {
+	  var setStream = function (thisUser) {
 		//user, home, or no arg to return source array val
-		var home, stream;
-		if (user === "home") stream = streams.home;
-		else if (user === null) return;
-		else stream = streams.users.user;
-		return stream;
+		if (thisUser === "home") {
+		  stream = [];
+		  $('#streamTitle').text("Twittles on your Home Stream");
+		  return stream = streams.home;
+		  }
+		else if (arguments.length === 0) {return stream;}
+		else {
+		  //this is where my problem is--steams.users is
+		  //an object filled with other objects, not array.
+		  for (var i=0; i<streams.users.length; i++) {
+		    if (streams.users[i] === thisUser) {
+			  stream = [];
+			  console.log("executed setStream("+ thisUser + ")")
+			  return stream.push(streams.users[i]);
+			}
+		  }
+		}
+	  }
+
+	  var getUser = function () {
+	  var thisUser = $(this).val();
+		 console.log("Clicked " + thisUser + ", trying setStream("+thisUser+")");
+		 return setStream(thisUser);
 	  }
 
       $(document).ready(function(){
 	    $("abbr.timeago").timeago(); //attaching time func
-        var intervalID = setInterval(function (){showStream(setStream("home"))}, 900);
-		//Will have filtering soon..
-		//Trying to figure out how to toggle it.
-		//showStream(streams.users.mracus) works
-		//however, not yet toggled by clicking name.
-		//showStream(setStream($#user)) or somesuch.	
-      });
+		setStream("home");
+        var intervalID = setInterval(function (){
+		  showStream(setStream());
+		}, 900);
+		$('body').delegate('.tweetUser', 'click', getUser);
+	  }); 
+	  		
     </script>
   </body>
 </html>
