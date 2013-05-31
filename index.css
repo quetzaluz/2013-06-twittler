@@ -30,11 +30,31 @@ body {
   font-size: 18pt;
 }
 
+#tweetForm {
+  margin: 0 auto;
+  font-family: Arial;
+  color: yellow;
+  font-style: bold;
+  font-size: 16pt;
+
+}
+
+#submitMsg {
+  font-family: Arial;
+  font-size: 12pt;
+  background-color:#ffec64;;
+  border-radius:6px;
+  border:solid #ffaa22;
+  color:#333333;
+}
+
 #tweetBox {
+  margin-left: auto;
+  margin-right: auto;
   font-family: "Andale Mono", AndaleMono, monospace;
   background-color: transparent;
   width: 90%;
-  margin: 0 auto;
+  height: 60%;
   overflow: scroll;
   overflow-x: hidden;
  }
@@ -54,7 +74,7 @@ body {
   box-shadow:inset 0px 1px 0px 0px #fff6af;
   background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ffec64), color-stop(1, #ffab23) );
   background:-moz-linear-gradient( center top, #ffec64 5%, #ffab23 100% ); 
- filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffec64', endColorstr='#ffab23');
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffec64', endColorstr='#ffab23');
   background-color:#ffec64;
   -moz-border-radius:6px;
   -webkit-border-radius:6px;
@@ -68,3 +88,6 @@ body {
   color: #005C99;
 }
  
+#outer {
+  width: 100%;
+}

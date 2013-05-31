@@ -6,9 +6,12 @@
     <script src="data_generator.js"></script>
 	<link rel="stylesheet" type="text/css" href="index.css">
   </head>
-  <body>
+  <body>	
+  <div id="outer">
   <div id="streamTitle"></div>
+  <div id="tweetForm"></div>
   <div id="tweetBox"></div>
+  </div>
     <script>
       //functions to be called in interval
 	  var stream;
@@ -18,16 +21,15 @@
 		var limit;
 		if (stream == streams.home) limit = stream.length - 20;
 		else limit = 0;
-		var $body = $('body');
         var $tweetBox = $('#tweetBox');
         $tweetBox.html(''); 
 		while(index > limit){
-		  $tweetBox.css('height', $(window).height() - 50 + 'px');
+		  $tweetBox.css('height', $(window).height() - 80 + 'px');
           var tweet = stream[index];
 		  var $tweet = $("<div class='tweet'></div>"); 
           var $tweetText = $('<div class = "tweetText"></div>');
           var $tweetTime = $('<div class = "tweetTime"></div>');
-		  var $tweetUser = $("<button type='button' class = 'tweetUser' id = '"+ tweet.user+"'></a>");
+		  var $tweetUser = $("<button type='button' class = 'tweetUser' id = '"+ tweet.user+"'>");
 		  $tweetUser.text("@" + tweet.user);
 		  $tweetUser.val(tweet.user);
           $tweetText.text(": " + tweet.message);
@@ -65,14 +67,42 @@
 		 return setStream(thisUser);
 	  }
 
+	  var tweetForm = function () {
+	  	if (!visitor && !message) {
+	  	 //commented out code that got visitor data as string
+	  	  var visitor = 'Username';
+	  	  var message = 'Message';
+	  	}
+	  	var $tweetForm = $('#tweetForm');
+	  	var $formWrapper = $('<form></form>');
+	  	var $visitor = $('<input type="text" class="visitor" value="'+visitor+'"id="'+visitor+'"></input>');
+	  	var $msg = $('<input type="text" id="msg" value="'+ message +'"></input>');
+	  	var $submitMsg = $('<input type="button" id="submitMsg" value="Post"></input>');
+	  	$visitor.appendTo($formWrapper);
+	  	$msg.appendTo($formWrapper);
+	  	$submitMsg.appendTo($formWrapper);
+	  	$formWrapper.appendTo($tweetForm);
+	  	visitor = $('.visitor').val();
+	  	message = $('#msg').val();
+	  }
+
       $(document).ready(function(){
 	    $("abbr.timeago").timeago(); //attaching time func
 		setStream("home");
+		tweetForm();
         var intervalID = setInterval(function (){
-		  showStream(setStream());
+			showStream(setStream());
 		}, 900);
 		$('body').delegate('.tweetUser', 'click', getUser);
 		$('body').delegate('#streamTitle', 'click', function () {setStream("home")})
+		$('body').delegate('#submitMsg', 'click', function () {
+			message = $('#msg').val();
+			visitor = $('.visitor').val();
+			if (message && visitor) 
+                if (!streams.users[visitor]) {
+                	streams.users[visitor] = [];}
+				return writeTweet(message);
+			});
 	  }); 
 	  		
     </script>

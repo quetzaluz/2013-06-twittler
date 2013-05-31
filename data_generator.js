@@ -18,6 +18,7 @@ var addTweet = function(newTweet){
   var username = newTweet.user;
   streams.users[username].push(newTweet);
   streams.home.push(newTweet);
+  console.log("Fired addTweet")
 };
 
 // utility function
@@ -65,5 +66,8 @@ var writeTweet = function(message){
   var tweet = {};
   tweet.user = visitor;
   tweet.message = message;
+  //ADDED the code below.
+  tweet.created_at = new Date();
+  console.log("fired writeTweet")
   addTweet(tweet);
 };
