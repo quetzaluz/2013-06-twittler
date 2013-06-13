@@ -14,38 +14,48 @@
   </div>
     <script>
       //functions to be called in interval
-	  var stream;
+	  var stream, limit, lastIndex, index, lastTime;
 	  
 	  var showStream = function (stream) {
-	    var index = stream.length - 1;
-		var limit;
-		if (stream == streams.home) limit = stream.length - 20;
-		else limit = 0;
-        var $tweetBox = $('#tweetBox');
-        $tweetBox.html(''); 
-		while(index > limit){
-		  $tweetBox.css('height', $(window).height() - 80 + 'px');
-          var tweet = stream[index];
-		  var $tweet = $("<div class='tweet'></div>"); 
-          var $tweetText = $('<div class = "tweetText"></div>');
-          var $tweetTime = $('<div class = "tweetTime"></div>');
-		  var $tweetUser = $("<button type='button' class = 'tweetUser' id = '"+ tweet.user+"'>");
-		  $tweetUser.text("@" + tweet.user);
-		  $tweetUser.val(tweet.user);
-          $tweetText.text(": " + tweet.message);
-          $tweetTime.text(jQuery.timeago(tweet.created_at));
-		  $tweetUser.appendTo($tweet);
-          $tweetText.appendTo($tweet);
-          $tweetTime.appendTo($tweet);
-		  $tweet.appendTo($tweetBox);
-		  index -= 1;
-		}
+	    $('#tweetBox').css('height', $(window).height() - 80 + 'px');
+	      index = stream.length -1;
+	      if (lastTime === stream[index].created_at) return;
+	      else {
+	    	lastTime = stream[index].created_at
+			postTweet(index);
+			hideLastTweet();
+			index -= 1;
+		  }
 	  }
+
+	  var postTweet = function(index) {
+		var tweet = stream[index];
+		var lastTime = tweet.created_at;
+		var $tweet = $("<div class='tweet'></div>"); 
+        var $tweetText = $('<div class = "tweetText"></div>');
+        var $tweetTime = $('<div class = "tweetTime"></div>');
+		var $tweetUser = $("<button type='button' class = 'tweetUser' id = '"+ tweet.user+"'>");
+		$tweetUser.text("@" + tweet.user);
+		$tweetUser.val(tweet.user);
+        $tweetText.text(": " + tweet.message);
+        $tweetTime.text(jQuery.timeago(tweet.created_at));
+		$tweetUser.appendTo($tweet);
+        $tweetText.appendTo($tweet);
+        $tweetTime.appendTo($tweet);
+        $tweet.prependTo('#tweetBox').hide().slideToggle();
+	  }
+
+	  var hideLastTweet = function() {
+	  	console.log("Fired hideLastTweet.")
+	  	for (var i = 20; i < $('#tweetBox').children().length; i++)
+	  	$('#tweetBox').children()[i].remove()
+	  };
 
 	  var setStream = function (thisUser) {
 		//user, "home", or no arg to return source array val
 		if (thisUser === "home") {
 		  $('#streamTitle').text("Twittles on your Home Stream");
+		  $('#tweetBox').children().css({"opacity": "0.75"});
 		  return stream = streams.home;
 		  }
 		else if (arguments.length === 0) {return stream;}
@@ -55,6 +65,7 @@
 		  for (var prop1 in streams.users) {
 		    if (prop1 === thisUser && typeof streams.users[prop1] == "object") {
 			   $('#streamTitle').text("Twittles on "+ thisUser +"'s stream")
+		       $('#tweetBox').children().css({"opacity": "0.75"});
 			   return stream = streams.users[thisUser];
 			}
 		  }
